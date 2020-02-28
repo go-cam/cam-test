@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/camBase"
+	"test/backend/controllers"
 )
 
 // 获取默认配置
@@ -24,7 +25,11 @@ func websocketServer() camBase.ConfigComponentInterface {
 }
 
 func httpServer() camBase.ConfigComponentInterface {
+	config := cam.NewHttpServerConfig(20000)
+	config.SessionName = "test"
 	sslCert := cam.App.GetEvn("SSL_CERT")
 	sslKey := cam.App.GetEvn("SSL_KEY")
-	return cam.NewHttpServerConfig(20000).SetSessionName("test").ListenSsl(20001, sslCert, sslKey)
+	config.ListenSsl(20001, sslCert, sslKey)
+	config.Register(&controllers.TestController{})
+	return config
 }

@@ -6,20 +6,19 @@ import (
 
 // text controller
 type TestController struct {
-	cam.BaseController
+	cam.Controller
 }
 
 func (controller *TestController) Init() {
-	controller.BaseController.Init()
+	controller.Controller.Init()
 
-	controller.DefaultAction = "Test"
+	controller.SetDefaultActionName("test")
 }
 
 // test action
 func (controller *TestController) Test() {
 	_ = cam.App.Info("title", "content")
-	controller.GetApp().Stop()
-	controller.Write([]byte("done"))
+	controller.SetResponse([]byte("done"))
 }
 
 // private func
