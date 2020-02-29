@@ -2,10 +2,11 @@ package config
 
 import (
 	"github.com/go-cam/cam"
+	"github.com/go-cam/cam/camBase"
 )
 
 // 获取默认配置
-func GetApp() *cam.Config {
+func GetApp() camBase.AppConfigInterface {
 	config := cam.NewConfig()
 	return config
 }

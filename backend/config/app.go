@@ -7,13 +7,14 @@ import (
 )
 
 // 获取默认配置
-func GetApp() *cam.Config {
+func GetApp() camBase.AppConfigInterface {
 	config := cam.NewConfig()
 	config.ComponentDict = map[string]camBase.ComponentConfigInterface{
 		"ws":      websocketServer(),
 		"http":    httpServer(),
 		"db":      cam.NewDatabaseConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
 		"console": cam.NewConsoleConfig(),
+		"log":     cam.NewLogConfig(),
 	}
 	return config
 }

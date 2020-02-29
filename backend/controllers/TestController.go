@@ -17,7 +17,7 @@ func (controller *TestController) Init() {
 
 // test action
 func (controller *TestController) Test() {
-	_ = cam.App.Info("title", "content")
+	cam.App.Info("title", "content")
 	controller.SetResponse([]byte("done"))
 }
 
