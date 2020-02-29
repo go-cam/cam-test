@@ -9,7 +9,7 @@ import (
 // 获取默认配置
 func GetApp() *cam.Config {
 	config := cam.NewConfig()
-	config.ComponentDict = map[string]camBase.ConfigComponentInterface{
+	config.ComponentDict = map[string]camBase.ComponentConfigInterface{
 		"ws":      websocketServer(),
 		"http":    httpServer(),
 		"db":      cam.NewDatabaseConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
@@ -18,18 +18,19 @@ func GetApp() *cam.Config {
 	return config
 }
 
-func websocketServer() camBase.ConfigComponentInterface {
+func websocketServer() camBase.ComponentConfigInterface {
 	sslCert := cam.App.GetEvn("SSL_CERT")
 	sslKey := cam.App.GetEvn("SSL_KEY")
 	return cam.NewWebsocketServerConfig(20010).ListenSsl(20011, sslCert, sslKey)
 }
 
-func httpServer() camBase.ConfigComponentInterface {
+func httpServer() camBase.ComponentConfigInterface {
 	config := cam.NewHttpServerConfig(20000)
 	config.SessionName = "test"
-	sslCert := cam.App.GetEvn("SSL_CERT")
-	sslKey := cam.App.GetEvn("SSL_KEY")
-	config.ListenSsl(20001, sslCert, sslKey)
+	config.IsSslOn = true
+	config.SslPort = 20001
+	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
+	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.Register(&controllers.TestController{})
 	return config
 }
