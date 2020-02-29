@@ -19,9 +19,12 @@ func GetApp() *cam.Config {
 }
 
 func websocketServer() camBase.ComponentConfigInterface {
-	sslCert := cam.App.GetEvn("SSL_CERT")
-	sslKey := cam.App.GetEvn("SSL_KEY")
-	return cam.NewWebsocketServerConfig(20010).ListenSsl(20011, sslCert, sslKey)
+	config := cam.NewWebsocketConfig(20012)
+	config.IsSslOn = true
+	config.SslPort = 20013
+	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
+	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
+	return config
 }
 
 func httpServer() camBase.ComponentConfigInterface {
