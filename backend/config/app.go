@@ -3,6 +3,8 @@ package config
 import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/camBase"
+	"github.com/gorilla/websocket"
+	"net/http"
 	"test/backend/controllers"
 )
 
@@ -25,6 +27,10 @@ func websocketServer() camBase.ComponentConfigInterface {
 	config.SslPort = 20013
 	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
 	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
+	config.Register(&controllers.TestController{})
+	config.AddRoute("test/abc", func(conn *websocket.Conn) []byte {
+		return []byte("route test succ")
+	})
 	return config
 }
 
@@ -36,5 +42,8 @@ func httpServer() camBase.ComponentConfigInterface {
 	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
 	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.Register(&controllers.TestController{})
+	config.AddRoute("test/test", func(responseWriter http.ResponseWriter, request *http.Request) {
+		_, _ = responseWriter.Write([]byte("route test succ"))
+	})
 	return config
 }
