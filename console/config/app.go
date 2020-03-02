@@ -2,7 +2,7 @@ package config
 
 import (
 	"github.com/go-cam/cam"
-	"github.com/go-cam/cam/camBase"
+	"github.com/go-cam/cam/base/camBase"
 	"test/console/controllers"
 )
 

@@ -2,7 +2,7 @@ package migrations
 
 import (
 	"github.com/go-cam/cam"
-	"github.com/go-cam/cam/camConsole"
+	"github.com/go-cam/cam/component/camConsole"
 )
 
 func init() {
