@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/go-cam/cam"
+	"time"
 )
 
 // text controller
@@ -26,7 +27,23 @@ func (controller *TestController) Test() {
 	controller.SetResponse([]byte("done"))
 }
 
-// private func
-func (controller *TestController) privateFunc() {
+// cache test
+func (controller *TestController) Cache() {
+	cam.App.GetCache().SetDuration("short", "123123", 100*time.Minute)
+	controller.SetResponse([]byte("cache test done"))
+}
+func (controller *TestController) CacheGet() {
+	v := cam.App.GetCache().Get("short")
+	if v != nil {
+		cam.App.Debug("TestController.CacheGet.has", v.(string))
+	} else {
+		cam.App.Debug("TestController.CacheGet not", "")
+	}
 
+	controller.SetResponse([]byte("CacheGet test done"))
+}
+
+func (controller *TestController) CacheFlush() {
+	cam.App.GetCache().Flush()
+	controller.SetResponse([]byte("CacheFlush test done"))
 }

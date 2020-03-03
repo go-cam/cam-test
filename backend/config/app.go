@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"net/http"
 	"test/backend/controllers"
+	"time"
 )
 
 // 获取默认配置
@@ -17,6 +18,7 @@ func GetApp() camBase.AppConfigInterface {
 		"db":      cam.NewDatabaseConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
 		"console": cam.NewConsoleConfig(),
 		"log":     cam.NewLogConfig(),
+		"cache":   cacheConfig(),
 	}
 	return config
 }
@@ -45,5 +47,14 @@ func httpServer() camBase.ComponentConfigInterface {
 	config.AddRoute("test/test", func(responseWriter http.ResponseWriter, request *http.Request) {
 		_, _ = responseWriter.Write([]byte("route test succ"))
 	})
+	return config
+}
+
+func cacheConfig() camBase.ComponentConfigInterface {
+	config := cam.NewCacheConfig()
+	fileCache := cam.NewFileCache()
+	fileCache.GCInterval = 5 * time.Second
+	config.Engine = fileCache
+	config.DefaultDuration = time.Minute
 	return config
 }
