@@ -52,8 +52,7 @@ func httpServer() camBase.ComponentConfigInterface {
 
 func cacheConfig() camBase.ComponentConfigInterface {
 	config := cam.NewCacheConfig()
-	fileCache := cam.NewFileCache()
-	fileCache.GCInterval = 5 * time.Second
+	fileCache := cam.NewRedisCache()
 	config.Engine = fileCache
 	config.DefaultDuration = time.Minute
 	return config
