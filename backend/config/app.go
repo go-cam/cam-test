@@ -44,6 +44,7 @@ func httpServer() camBase.ComponentConfigInterface {
 	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
 	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.Register(&controllers.TestController{})
+	config.Register(&controllers.FileController{})
 	config.AddRoute("test/test", func(responseWriter http.ResponseWriter, request *http.Request) {
 		_, _ = responseWriter.Write([]byte("route test succ"))
 	})
