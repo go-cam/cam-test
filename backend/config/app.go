@@ -38,7 +38,7 @@ func websocketServer() camBase.ComponentConfigInterface {
 }
 
 func httpServer() camBase.ComponentConfigInterface {
-	config := cam.NewHttpServerConfig(20000)
+	config := cam.NewHttpConfig(20000)
 	config.SessionName = "test"
 	config.IsSslOn = true
 	config.SslPort = 20001
