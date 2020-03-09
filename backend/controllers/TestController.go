@@ -10,29 +10,29 @@ type TestController struct {
 	cam.Controller
 }
 
-func (controller *TestController) Init() {
-	controller.Controller.Init()
+func (ctrl *TestController) Init() {
+	ctrl.Controller.Init()
 }
 
-func (controller *TestController) GetDefaultActionName() string {
+func (ctrl *TestController) GetDefaultActionName() string {
 	return "Test"
 }
 
 // test action
-func (controller *TestController) Test() {
+func (ctrl *TestController) Test() {
 	cam.App.Debug("title", "content")
 	cam.App.Info("title", "content")
 	cam.App.Warn("title", "content")
 	cam.App.Error("title", "content")
-	controller.SetResponse([]byte("done"))
+	ctrl.SetResponse([]byte("done"))
 }
 
 // cache test
-func (controller *TestController) Cache() {
+func (ctrl *TestController) Cache() {
 	cam.App.GetCache().SetDuration("short", "123123", 100*time.Minute)
-	controller.SetResponse([]byte("cache test done"))
+	ctrl.SetResponse([]byte("cache test done"))
 }
-func (controller *TestController) CacheGet() {
+func (ctrl *TestController) CacheGet() {
 	v := cam.App.GetCache().Get("short")
 	if v != nil {
 		cam.App.Debug("TestController.CacheGet.has", v.(string))
@@ -40,10 +40,19 @@ func (controller *TestController) CacheGet() {
 		cam.App.Debug("TestController.CacheGet not", "")
 	}
 
-	controller.SetResponse([]byte("CacheGet test done"))
+	ctrl.SetResponse([]byte("CacheGet test done"))
 }
 
-func (controller *TestController) CacheFlush() {
+func (ctrl *TestController) CacheFlush() {
 	cam.App.GetCache().Flush()
-	controller.SetResponse([]byte("CacheFlush test done"))
+	ctrl.SetResponse([]byte("CacheFlush test done"))
+}
+
+func (ctrl *TestController) SendMail() {
+	mailCompI := cam.App.GetMail()
+	err := mailCompI.Send("test", "cam test", "281093509@qq.com")
+	if err != nil {
+		cam.App.Error("TestController.SendMail", err.Error())
+	}
+	ctrl.SetResponse([]byte("SendMail done,"))
 }

@@ -19,6 +19,7 @@ func GetApp() camBase.AppConfigInterface {
 		"console": cam.NewConsoleConfig(),
 		"log":     cam.NewLogConfig(),
 		"cache":   cacheConfig(),
+		"mail":    mailConfig(),
 	}
 	return config
 }
@@ -56,5 +57,13 @@ func cacheConfig() camBase.ComponentConfigInterface {
 	fileCache := cam.NewRedisCache()
 	config.Engine = fileCache
 	config.DefaultDuration = time.Minute
+	return config
+}
+
+func mailConfig() camBase.ComponentConfigInterface {
+	account := cam.App.GetEvn("EMAIL_ACCOUNT")
+	password := cam.App.GetEvn("EMAIL_PASSWORD")
+	host := cam.App.GetEvn("EMAIL_HOST")
+	config := cam.NewMailConfig(account, password, host)
 	return config
 }
