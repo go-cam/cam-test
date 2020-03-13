@@ -56,3 +56,12 @@ func (ctrl *TestController) SendMail() {
 	}
 	ctrl.SetResponse([]byte("SendMail done,"))
 }
+
+func (ctrl *TestController) Recover() {
+	rec := ctrl.GetRecover()
+	cam.App.Warn("TestController.Recover", rec.Error())
+}
+
+func (ctrl *TestController) Panic() {
+	panic(cam.NewRecover("test"))
+}
