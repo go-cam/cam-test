@@ -26,10 +26,10 @@ func GetApp() camBase.AppConfigInterface {
 
 func websocketServer() camBase.ComponentConfigInterface {
 	config := cam.NewWebsocketConfig(20012)
-	config.IsSslOn = true
-	config.SslPort = 20013
-	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
-	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
+	//config.IsSslOn = true
+	//config.SslPort = 20013
+	//config.SslCertFile = cam.App.GetEvn("SSL_CERT")
+	//config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.Register(&controllers.TestController{})
 	config.AddRoute("test/abc", func(conn *websocket.Conn) []byte {
 		return []byte("route test succ")
@@ -40,10 +40,10 @@ func websocketServer() camBase.ComponentConfigInterface {
 func httpServer() camBase.ComponentConfigInterface {
 	config := cam.NewHttpConfig(20000)
 	config.SessionName = "test"
-	config.IsSslOn = true
-	config.SslPort = 20001
-	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
-	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
+	//config.IsSslOn = true
+	//config.SslPort = 20001
+	//config.SslCertFile = cam.App.GetEvn("SSL_CERT")
+	//config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.RecoverRoute("test/recover")
 
 	config.Register(&controllers.TestController{})
