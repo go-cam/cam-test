@@ -20,10 +20,12 @@ func (ctrl *TestController) GetDefaultActionName() string {
 
 // test action
 func (ctrl *TestController) Test() {
+	cam.App.Trace("title", "content")
 	cam.App.Debug("title", "content")
 	cam.App.Info("title", "content")
 	cam.App.Warn("title", "content")
 	cam.App.Error("title", "content")
+	cam.App.Fatal("title", "content")
 	ctrl.SetResponse([]byte("done"))
 }
 
@@ -64,4 +66,9 @@ func (ctrl *TestController) Recover() {
 
 func (ctrl *TestController) Panic() {
 	panic(cam.NewRecover("test"))
+}
+
+func (ctrl *TestController) Post() {
+	abc, _ := ctrl.GetValue("abc").(string)
+	cam.App.Info("TestController.Post", "acb = "+abc)
 }
