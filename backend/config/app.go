@@ -17,10 +17,17 @@ func GetApp() camBase.AppConfigInterface {
 		"http":    httpServer(),
 		"db":      cam.NewDatabaseConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
 		"console": cam.NewConsoleConfig(),
-		"log":     cam.NewLogConfig(),
+		"log":     log(),
 		"cache":   cacheConfig(),
 		"mail":    mailConfig(),
 	}
+	return config
+}
+
+func log() camBase.ComponentConfigInterface {
+	config := cam.NewLogConfig()
+	config.PrintLevel = cam.LogLevelAll
+	config.WriteLevel = cam.LogLevelAll
 	return config
 }
 
