@@ -72,3 +72,7 @@ func (ctrl *TestController) Post() {
 	abc, _ := ctrl.GetValue("abc").(string)
 	cam.App.Info("TestController.Post", "acb = "+abc)
 }
+
+func (ctrl *TestController) Socket() {
+	ctrl.SetResponse([]byte("123123"))
+}

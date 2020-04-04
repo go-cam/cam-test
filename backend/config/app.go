@@ -20,6 +20,7 @@ func GetApp() camBase.AppConfigInterface {
 		"log":     log(),
 		"cache":   cacheConfig(),
 		"mail":    mailConfig(),
+		"tcp":     socketConfig(),
 	}
 	return config
 }
@@ -74,5 +75,11 @@ func mailConfig() camBase.ComponentConfigInterface {
 	password := cam.App.GetEvn("EMAIL_PASSWORD")
 	host := cam.App.GetEvn("EMAIL_HOST")
 	config := cam.NewMailConfig(account, password, host)
+	return config
+}
+
+func socketConfig() camBase.ComponentConfigInterface {
+	config := cam.NewSocketConfig(20022)
+	config.Trace = true
 	return config
 }
