@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"github.com/go-cam/cam/base/camStructs"
 	"github.com/go-cam/cam/base/camUtils"
 	"log"
@@ -35,7 +36,10 @@ func main() {
 	_, err = conn.Write(send)
 
 	var recv []byte
-	_, err = conn.Read(recv)
+	if recv, err = bufio.NewReader(conn).ReadBytes('\x17'); err != nil {
+		panic(err)
+	}
+	recv = recv[:len(recv)-1]
 	log.Println("recv = " + string(recv))
 
 	time.Sleep(5 * time.Second)

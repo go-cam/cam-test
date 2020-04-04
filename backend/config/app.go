@@ -81,5 +81,8 @@ func mailConfig() camBase.ComponentConfigInterface {
 func socketConfig() camBase.ComponentConfigInterface {
 	config := cam.NewSocketConfig(20022)
 	config.Trace = true
+
+	config.Register(&controllers.TestController{})
+	config.Register(&controllers.FileController{})
 	return config
 }
