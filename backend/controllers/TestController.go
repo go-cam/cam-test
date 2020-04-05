@@ -91,7 +91,7 @@ func (ctrl *TestController) Socket() {
 func (ctrl *TestController) Valid() {
 	v := new(structs.Valid)
 	v.Email = "123@123.com"
-	v.MyEmail = "abc@abc"
+	v.MyEmail = "abc@abc.a"
 
 	err, _ := cam.Valid(v)
 	if err != nil {

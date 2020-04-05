@@ -15,6 +15,6 @@ type Email string
 
 func (s *Valid) Rules() []camBase.ValidRuleInterface {
 	return []camBase.ValidRuleInterface{
-		cam.NewRule([]string{"Email", "MyEmail"}, []camBase.ValidHandler{cam.Rule.Email}),
+		cam.NewRule([]string{"Email", "MyEmail"}, cam.Rule.Email, cam.Rule.Length(0, 100)),
 	}
 }
