@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/go-cam/cam"
+	"test/backend/structs"
 	"time"
 )
 
@@ -31,7 +32,17 @@ func (ctrl *TestController) Test() {
 
 // cache test
 func (ctrl *TestController) Cache() {
-	cam.App.GetCache().SetDuration("short", "123123", 100*time.Minute)
+	cache := cam.App.GetCache()
+
+	cache.SetDuration("short", "123123", 100*time.Minute)
+	cache.Set("tt", "123123")
+	v := cache.Get("tt")
+	str, ok := v.(string)
+	if !ok {
+		str = "fail"
+	}
+	cam.Debug("TestController.Cache", "v = "+str)
+
 	ctrl.SetResponse([]byte("cache test done"))
 }
 func (ctrl *TestController) CacheGet() {
@@ -75,4 +86,17 @@ func (ctrl *TestController) Post() {
 
 func (ctrl *TestController) Socket() {
 	ctrl.SetResponse([]byte("123123"))
+}
+
+func (ctrl *TestController) Valid() {
+	v := new(structs.Valid)
+	v.Email = "123@123.com"
+	v.MyEmail = "abc@abc"
+
+	err, _ := cam.Valid(v)
+	if err != nil {
+		cam.Debug("TestController.valid", err.Error())
+	} else {
+		cam.Debug("TestController.valid", "no error")
+	}
 }
