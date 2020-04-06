@@ -13,8 +13,8 @@ type Valid struct {
 
 type Email string
 
-func (s *Valid) Rules() []camBase.ValidRuleInterface {
-	return []camBase.ValidRuleInterface{
+func (s *Valid) Rules() []camBase.RuleInterface {
+	return []camBase.RuleInterface{
 		cam.NewRule([]string{"Email", "MyEmail"}, cam.Rule.Email, cam.Rule.Length(0, 100)),
 	}
 }
