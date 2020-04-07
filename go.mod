@@ -1,6 +1,6 @@
 module test
 
-go 1.13
+go 1.14
 
 require (
 	github.com/go-cam/cam v0.0.0-20200226085529-b64c3af3eb80
