@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"net/http"
 	"test/backend/controllers"
+	"test/backend/structs"
 	"time"
 )
 
@@ -45,6 +46,7 @@ func httpServer() camBase.ComponentConfigInterface {
 	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
 	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.RecoverRoute("test/recover")
+	config.SetContextStruct(&structs.Context{})
 
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})

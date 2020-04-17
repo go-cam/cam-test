@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/go-cam/cam"
+	"test/backend/structs"
 	"time"
 )
 
@@ -64,4 +65,15 @@ func (ctrl *TestController) Recover() {
 
 func (ctrl *TestController) Panic() {
 	panic(cam.NewRecover("test"))
+}
+
+func (ctrl *TestController) ContextHttpInterface() {
+	ctxI := ctrl.GetContext()
+	ctx, ok := ctxI.(*structs.Context)
+	if !ok {
+		ctrl.SetResponse([]byte("fail"))
+		return
+	}
+
+	ctrl.SetResponse([]byte(ctx.GetHttpRequest().RemoteAddr))
 }
