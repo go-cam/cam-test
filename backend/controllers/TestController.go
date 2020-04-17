@@ -21,16 +21,28 @@ func (ctrl *TestController) GetDefaultActionName() string {
 
 // test action
 func (ctrl *TestController) Test() {
+	cam.App.Trace("title", "content")
 	cam.App.Debug("title", "content")
 	cam.App.Info("title", "content")
 	cam.App.Warn("title", "content")
 	cam.App.Error("title", "content")
+	cam.App.Fatal("title", "content")
 	ctrl.SetResponse([]byte("done"))
 }
 
 // cache test
 func (ctrl *TestController) Cache() {
-	cam.App.GetCache().SetDuration("short", "123123", 100*time.Minute)
+	cache := cam.App.GetCache()
+
+	cache.SetDuration("short", "123123", 100*time.Minute)
+	cache.Set("tt", "123123")
+	v := cache.Get("tt")
+	str, ok := v.(string)
+	if !ok {
+		str = "fail"
+	}
+	cam.Debug("TestController.Cache", "v = "+str)
+
 	ctrl.SetResponse([]byte("cache test done"))
 }
 func (ctrl *TestController) CacheGet() {
@@ -76,4 +88,26 @@ func (ctrl *TestController) ContextHttpInterface() {
 	}
 
 	ctrl.SetResponse([]byte(ctx.GetHttpRequest().RemoteAddr))
+}
+
+func (ctrl *TestController) Post() {
+	abc, _ := ctrl.GetValue("abc").(string)
+	cam.App.Info("TestController.Post", "acb = "+abc)
+}
+
+func (ctrl *TestController) Socket() {
+	ctrl.SetResponse([]byte("123123"))
+}
+
+func (ctrl *TestController) Valid() {
+	v := new(structs.Valid)
+	v.Email = "123@123.com"
+	v.MyEmail = "abc@abc.a"
+
+	err, _ := cam.Valid(v)
+	if err != nil {
+		cam.Debug("TestController.valid", err.Error())
+	} else {
+		cam.Debug("TestController.valid", "no error")
+	}
 }

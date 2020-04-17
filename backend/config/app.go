@@ -18,19 +18,27 @@ func GetApp() camBase.AppConfigInterface {
 		"http":    httpServer(),
 		"db":      cam.NewDatabaseConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
 		"console": cam.NewConsoleConfig(),
-		"log":     cam.NewLogConfig(),
+		"log":     log(),
 		"cache":   cacheConfig(),
 		"mail":    mailConfig(),
+		"tcp":     socketConfig(),
 	}
+	return config
+}
+
+func log() camBase.ComponentConfigInterface {
+	config := cam.NewLogConfig()
+	config.PrintLevel = cam.LogLevelAll
+	config.WriteLevel = cam.LogLevelAll
 	return config
 }
 
 func websocketServer() camBase.ComponentConfigInterface {
 	config := cam.NewWebsocketConfig(20012)
-	config.IsSslOn = true
-	config.SslPort = 20013
-	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
-	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
+	//config.IsSslOn = true
+	//config.SslPort = 20013
+	//config.SslCertFile = cam.App.GetEvn("SSL_CERT")
+	//config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.Register(&controllers.TestController{})
 	config.AddRoute("test/abc", func(conn *websocket.Conn) []byte {
 		return []byte("route test succ")
@@ -41,10 +49,10 @@ func websocketServer() camBase.ComponentConfigInterface {
 func httpServer() camBase.ComponentConfigInterface {
 	config := cam.NewHttpConfig(20000)
 	config.SessionName = "test"
-	config.IsSslOn = true
-	config.SslPort = 20001
-	config.SslCertFile = cam.App.GetEvn("SSL_CERT")
-	config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
+	//config.IsSslOn = true
+	//config.SslPort = 20001
+	//config.SslCertFile = cam.App.GetEvn("SSL_CERT")
+	//config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.RecoverRoute("test/recover")
 	config.SetContextStruct(&structs.Context{})
 
@@ -69,5 +77,14 @@ func mailConfig() camBase.ComponentConfigInterface {
 	password := cam.App.GetEvn("EMAIL_PASSWORD")
 	host := cam.App.GetEvn("EMAIL_HOST")
 	config := cam.NewMailConfig(account, password, host)
+	return config
+}
+
+func socketConfig() camBase.ComponentConfigInterface {
+	config := cam.NewSocketConfig(20022)
+	config.Trace = true
+
+	config.Register(&controllers.TestController{})
+	config.Register(&controllers.FileController{})
 	return config
 }
