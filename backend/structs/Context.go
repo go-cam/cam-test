@@ -8,10 +8,10 @@ import (
 
 type Context struct {
 	cam.Context
-	camBase.ContextHttpInterface
+	camBase.HttpContextInterface
 
 	responseWriter http.ResponseWriter
-	request *http.Request
+	request        *http.Request
 }
 
 func (c *Context) SetHttpResponseWriter(responseWriter http.ResponseWriter) {

@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"net/http"
 	"test/backend/controllers"
-	"test/backend/structs"
+	"test/backend/middlewares"
 	"time"
 )
 
@@ -49,18 +49,14 @@ func websocketServer() camBase.ComponentConfigInterface {
 func httpServer() camBase.ComponentConfigInterface {
 	config := cam.NewHttpConfig(20000)
 	config.SessionName = "test"
-	//config.IsSslOn = true
-	//config.SslPort = 20001
-	//config.SslCertFile = cam.App.GetEvn("SSL_CERT")
-	//config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.RecoverRoute("test/recover")
-	config.SetContextStruct(&structs.Context{})
 
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})
 	config.AddRoute("test/test", func(responseWriter http.ResponseWriter, request *http.Request) {
 		_, _ = responseWriter.Write([]byte("route test succ"))
 	})
+	config.AddMiddleware("", &middlewares.LogMiddleware{})
 	return config
 }
 
