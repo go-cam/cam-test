@@ -4,7 +4,6 @@ import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camBase"
 	"github.com/gorilla/websocket"
-	"net/http"
 	"test/backend/controllers"
 	"test/backend/middlewares"
 	"time"
@@ -53,10 +52,9 @@ func httpServer() camBase.ComponentConfigInterface {
 
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})
-	config.AddRoute("test/test", func(responseWriter http.ResponseWriter, request *http.Request) {
-		_, _ = responseWriter.Write([]byte("route test succ"))
-	})
 	config.AddMiddleware("", &middlewares.LogMiddleware{})
+	config.AddMiddleware("", &middlewares.AMiddleware{})
+	config.AddMiddleware("", &middlewares.BMiddleware{})
 	return config
 }
 
