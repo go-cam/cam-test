@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camBase"
-	"github.com/gorilla/websocket"
 	"test/backend/controllers"
 	"test/backend/middlewares"
 	"time"
@@ -34,14 +33,10 @@ func log() camBase.ComponentConfigInterface {
 
 func websocketServer() camBase.ComponentConfigInterface {
 	config := cam.NewWebsocketConfig(20012)
-	//config.IsSslOn = true
-	//config.SslPort = 20013
-	//config.SslCertFile = cam.App.GetEvn("SSL_CERT")
-	//config.SslKeyFile = cam.App.GetEvn("SSL_KEY")
 	config.Register(&controllers.TestController{})
-	config.AddRoute("test/abc", func(conn *websocket.Conn) []byte {
-		return []byte("route test succ")
-	})
+	config.AddMiddleware("", &middlewares.LogMiddleware{})
+	config.AddMiddleware("", &middlewares.AMiddleware{})
+	config.AddMiddleware("", &middlewares.BMiddleware{})
 	return config
 }
 
