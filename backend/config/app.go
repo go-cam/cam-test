@@ -75,5 +75,8 @@ func socketConfig() camBase.ComponentConfigInterface {
 
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})
+	config.AddMiddleware("", &middlewares.LogMiddleware{})
+	config.AddMiddleware("", &middlewares.AMiddleware{})
+	config.AddMiddleware("", &middlewares.BMiddleware{})
 	return config
 }
