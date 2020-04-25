@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camStructs"
+	"github.com/go-cam/cam/base/camUtils"
 	"test/backend/structs"
 	"time"
 )
@@ -53,7 +54,7 @@ func (ctrl *TestController) Cache() {
 func (ctrl *TestController) CacheGet() {
 	v := cam.App.GetCache().Get("short")
 	if v != nil {
-		cam.App.Debug("TestController.CacheGet.has", v.(string))
+		cam.App.Debug("TestController.CacheGet.has", camUtils.Json.EncodeStr(v))
 	} else {
 		cam.App.Debug("TestController.CacheGet not", "")
 	}
