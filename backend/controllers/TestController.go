@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/go-cam/cam"
+	"github.com/go-cam/cam/base/camStructs"
 	"test/backend/structs"
 	"time"
 )
@@ -34,7 +35,11 @@ func (ctrl *TestController) Test() {
 func (ctrl *TestController) Cache() {
 	cache := cam.App.GetCache()
 
-	cache.SetDuration("short", "123123", 100*time.Minute)
+	msg := new(camStructs.Message)
+	msg.Data = "123123123"
+	msg.Id = 123
+	msg.Route = "abc/xyz"
+	cache.SetDuration("short", msg, 100*time.Minute)
 	cache.Set("tt", "123123")
 	v := cache.Get("tt")
 	str, ok := v.(string)

@@ -4,8 +4,6 @@ import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camBase"
 	"test/backend/controllers"
-	"test/backend/middlewares"
-	"time"
 )
 
 // 获取默认配置
@@ -34,9 +32,9 @@ func log() camBase.ComponentConfigInterface {
 func websocketServer() camBase.ComponentConfigInterface {
 	config := cam.NewWebsocketConfig(20012)
 	config.Register(&controllers.TestController{})
-	config.AddMiddleware("", &middlewares.LogMiddleware{})
-	config.AddMiddleware("", &middlewares.AMiddleware{})
-	config.AddMiddleware("", &middlewares.BMiddleware{})
+	//config.AddMiddleware("", &middlewares.LogMiddleware{})
+	//config.AddMiddleware("", &middlewares.AMiddleware{})
+	//config.AddMiddleware("", &middlewares.BMiddleware{})
 	return config
 }
 
@@ -47,17 +45,17 @@ func httpServer() camBase.ComponentConfigInterface {
 
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})
-	config.AddMiddleware("", &middlewares.LogMiddleware{})
-	config.AddMiddleware("", &middlewares.AMiddleware{})
-	config.AddMiddleware("", &middlewares.BMiddleware{})
+	//config.AddMiddleware("", &middlewares.LogMiddleware{})
+	//config.AddMiddleware("", &middlewares.AMiddleware{})
+	//config.AddMiddleware("", &middlewares.BMiddleware{})
 	return config
 }
 
 func cacheConfig() camBase.ComponentConfigInterface {
 	config := cam.NewCacheConfig()
-	fileCache := cam.NewRedisCache()
-	config.Engine = fileCache
-	config.DefaultDuration = time.Minute
+	cache := cam.NewRedisCache()
+	cache.SetBase64Crypt()
+	config.Engine = cache
 	return config
 }
 
@@ -75,8 +73,8 @@ func socketConfig() camBase.ComponentConfigInterface {
 
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})
-	config.AddMiddleware("", &middlewares.LogMiddleware{})
-	config.AddMiddleware("", &middlewares.AMiddleware{})
-	config.AddMiddleware("", &middlewares.BMiddleware{})
+	//config.AddMiddleware("", &middlewares.LogMiddleware{})
+	//config.AddMiddleware("", &middlewares.AMiddleware{})
+	//config.AddMiddleware("", &middlewares.BMiddleware{})
 	return config
 }
