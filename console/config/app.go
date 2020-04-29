@@ -6,7 +6,7 @@ import (
 	"test/console/controllers"
 )
 
-func GetApp() *cam.Config {
+func GetApp() camBase.AppConfigInterface {
 	config := cam.NewConfig()
 	config.ComponentDict = map[string]camBase.ComponentConfigInterface{
 		"console": newConsoleConfig(),
