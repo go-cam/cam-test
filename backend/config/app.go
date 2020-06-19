@@ -4,6 +4,7 @@ import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camBase"
 	"test/backend/controllers"
+	"test/backend/structs"
 )
 
 // 获取默认配置
@@ -42,6 +43,7 @@ func httpServer() camBase.ComponentConfigInterface {
 	config := cam.NewHttpConfig(20000)
 	config.SessionName = "test"
 	config.RecoverRoute("test/recover")
+	config.SetContextStruct(&structs.HttpContextAo{})
 
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})

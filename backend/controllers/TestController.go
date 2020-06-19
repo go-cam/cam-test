@@ -85,17 +85,6 @@ func (ctrl *TestController) Panic() {
 	panic(cam.NewRecover("test"))
 }
 
-func (ctrl *TestController) ContextHttpInterface() {
-	ctxI := ctrl.GetContext()
-	ctx, ok := ctxI.(*structs.Context)
-	if !ok {
-		ctrl.SetResponse([]byte("fail"))
-		return
-	}
-
-	ctrl.SetResponse([]byte(ctx.GetHttpRequest().RemoteAddr))
-}
-
 func (ctrl *TestController) Post() {
 	abc, _ := ctrl.GetValue("abc").(string)
 	cam.App.Info("TestController.Post", "acb = "+abc)
