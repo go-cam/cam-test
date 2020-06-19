@@ -37,7 +37,7 @@ func (ctrl *TestController) Cache() {
 	cache := cam.App.GetCache()
 
 	msg := new(camStructs.Message)
-	msg.Data = "123123123"
+	msg.Data = map[string]interface{}{"testValue": "123123123"}
 	msg.Id = 123
 	msg.Route = "abc/xyz"
 	cache.SetDuration("short", msg, 100*time.Minute)
