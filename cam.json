@@ -1,0 +1,14 @@
+{
+	"version": "v0.5.0-alpha.0-dev",
+	"modules": {
+		"common": {
+			"type": "library"
+		},
+		"server": {
+			"type": "application"
+		},
+		"server-grpc": {
+			"type": "grpc"
+		}
+	}
+}
