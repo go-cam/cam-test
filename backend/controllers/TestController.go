@@ -29,7 +29,7 @@ func (ctrl *TestController) Test() {
 	cam.App.Warn("title", "content")
 	cam.App.Error("title", "content")
 	cam.App.Fatal("title", "content")
-	ctrl.SetResponse([]byte("done"))
+	ctrl.GetContext().Write([]byte("done"))
 }
 
 // cache test
@@ -40,8 +40,8 @@ func (ctrl *TestController) Cache() {
 	msg.Data = map[string]interface{}{"testValue": "123123123"}
 	msg.Id = 123
 	msg.Route = "abc/xyz"
-	cache.SetDuration("short", msg, 100*time.Minute)
-	cache.Set("tt", "123123")
+	_ = cache.SetDuration("short", msg, 100*time.Minute)
+	_ = cache.Set("tt", "123123")
 	v := cache.Get("tt")
 	str, ok := v.(string)
 	if !ok {
@@ -49,7 +49,7 @@ func (ctrl *TestController) Cache() {
 	}
 	cam.Debug("TestController.Cache", "v = "+str)
 
-	ctrl.SetResponse([]byte("cache test done"))
+	ctrl.GetContext().Write([]byte("cache test done"))
 }
 func (ctrl *TestController) CacheGet() {
 	v := cam.App.GetCache().Get("short")
@@ -59,12 +59,12 @@ func (ctrl *TestController) CacheGet() {
 		cam.App.Debug("TestController.CacheGet not", "")
 	}
 
-	ctrl.SetResponse([]byte("CacheGet test done"))
+	ctrl.GetContext().Write([]byte("CacheGet test done"))
 }
 
 func (ctrl *TestController) CacheFlush() {
-	cam.App.GetCache().Flush()
-	ctrl.SetResponse([]byte("CacheFlush test done"))
+	_ = cam.App.GetCache().Flush()
+	ctrl.GetContext().Write([]byte("CacheFlush test done"))
 }
 
 func (ctrl *TestController) SendMail() {
@@ -73,7 +73,7 @@ func (ctrl *TestController) SendMail() {
 	if err != nil {
 		cam.App.Error("TestController.SendMail", err.Error())
 	}
-	ctrl.SetResponse([]byte("SendMail done,"))
+	ctrl.GetContext().Write([]byte("SendMail done,"))
 }
 
 func (ctrl *TestController) Recover() {
@@ -91,7 +91,7 @@ func (ctrl *TestController) Post() {
 }
 
 func (ctrl *TestController) Socket() {
-	ctrl.SetResponse([]byte("123123"))
+	ctrl.GetContext().Write([]byte("123123"))
 }
 
 func (ctrl *TestController) Valid() {
@@ -105,4 +105,12 @@ func (ctrl *TestController) Valid() {
 	} else {
 		cam.Debug("TestController.valid", "no error")
 	}
+}
+
+func (ctrl *TestController) Grpc() {
+	name := ctrl.GetString("name")
+	if name == "" {
+		name = "grpc"
+	}
+
 }

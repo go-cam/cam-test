@@ -3,22 +3,28 @@ package config
 import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camBase"
+	"github.com/go-cam/cam/component/camGrpc"
+	"google.golang.org/grpc"
 	"test/backend/controllers"
+	"test/backend/services"
 	"test/backend/structs"
+	"time"
 )
 
 // 获取默认配置
 func GetApp() camBase.AppConfigInterface {
 	config := cam.NewConfig()
 	config.ComponentDict = map[string]camBase.ComponentConfigInterface{
-		"ws":      websocketServer(),
-		"http":    httpServer(),
-		"db":      cam.NewDatabaseConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
-		"console": cam.NewConsoleConfig(),
-		"log":     log(),
-		"cache":   cacheConfig(),
-		"mail":    mailConfig(),
-		"tcp":     socketConfig(),
+		"ws":               websocketServer(),
+		"http":             httpServer(),
+		"db":               cam.NewDatabaseConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
+		"console":          cam.NewConsoleConfig(),
+		"log":              log(),
+		"cache":            cacheConfig(),
+		"mail":             mailConfig(),
+		"tcp":              socketConfig(),
+		"grpc-backend-cli": grpcBackendCliConfig(),
+		"grpc-backend-srv": grpcBackendSrvConfig(),
 	}
 	return config
 }
@@ -41,8 +47,6 @@ func websocketServer() camBase.ComponentConfigInterface {
 
 func httpServer() camBase.ComponentConfigInterface {
 	config := cam.NewHttpConfig(20000)
-	config.SessionName = "test"
-	config.RecoverRoute("test/recover")
 	config.SetContextStruct(&structs.HttpContextAo{})
 
 	config.Register(&controllers.TestController{})
@@ -79,4 +83,28 @@ func socketConfig() camBase.ComponentConfigInterface {
 	//config.AddMiddleware("", &middlewares.AMiddleware{})
 	//config.AddMiddleware("", &middlewares.BMiddleware{})
 	return config
+}
+
+func grpcBackendCliConfig() camBase.ComponentConfigInterface {
+	conf := camGrpc.NewGRpcConfig(&camGrpc.Option{
+		Type: camGrpc.TypeClient,
+		Client: camGrpc.ClientOption{
+			ServerList: []string{"localhost:30001"},
+		},
+	})
+	return conf
+}
+
+func grpcBackendSrvConfig() camBase.ComponentConfigInterface {
+	conf := camGrpc.NewGRpcConfig(&camGrpc.Option{
+		Type: camGrpc.TypeServer,
+		Server: camGrpc.ServerOption{
+			Addr: "localhost:30001",
+			Opts: []grpc.ServerOption{
+				grpc.ConnectionTimeout(5 * time.Second),
+			},
+		},
+	})
+	conf.RegisterServer(services.NewGRpcService())
+	return conf
 }
