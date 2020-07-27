@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option go_package = ".;backend_grpc";
+
+package backend_grpc;
+
+
+service HelloWorld {
+  rpc SayHello (HelloWorld_SayHello_Recv) returns (HelloWorld_SayHello_Send) {}
+}
+
+message HelloWorld_SayHello_Recv {
+  string name = 1;
+}
+
+message HelloWorld_SayHello_Send {
+  string name = 1;
+}

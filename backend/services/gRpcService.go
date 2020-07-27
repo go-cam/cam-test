@@ -5,14 +5,10 @@ import (
 	pb "test/backend-grpc"
 )
 
-type gRpcService struct {
-	pb.UnimplementedGrpcServer
+type HelloWorldService struct {
+	pb.UnimplementedHelloWorldServer
 }
 
-func NewGRpcService() *gRpcService {
-	return &gRpcService{}
-}
-
-func (srv *gRpcService) Hello(ctx context.Context, recv *pb.Grpc_Hello_Recv) (*pb.Grpc_Hello_Send, error) {
-	return &pb.Grpc_Hello_Send{Name: recv.Name}, nil
+func (srv *HelloWorldService) Hello(ctx context.Context, recv *pb.HelloWorld_SayHello_Recv) (*pb.HelloWorld_SayHello_Send, error) {
+	return &pb.HelloWorld_SayHello_Send{Name: recv.Name}, nil
 }

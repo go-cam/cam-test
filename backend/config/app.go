@@ -3,8 +3,11 @@ package config
 import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camBase"
+	"github.com/go-cam/cam/component/camGRpcClient"
+	"github.com/go-cam/cam/component/camGRpcServer"
 	"github.com/go-cam/cam/component/camGrpc"
 	"google.golang.org/grpc"
+	backend_grpc "test/backend-grpc"
 	"test/backend/controllers"
 	"test/backend/services"
 	"test/backend/structs"
@@ -23,8 +26,8 @@ func GetApp() camBase.AppConfigInterface {
 		"cache":            cacheConfig(),
 		"mail":             mailConfig(),
 		"tcp":              socketConfig(),
-		"grpc-backend-cli": grpcBackendCliConfig(),
-		"grpc-backend-srv": grpcBackendSrvConfig(),
+		"grpc-client":		gRpcClientConfig(),
+		"grpc-server":		gRpcServerConfig(),
 	}
 	return config
 }
@@ -105,6 +108,23 @@ func grpcBackendSrvConfig() camBase.ComponentConfigInterface {
 			},
 		},
 	})
-	conf.RegisterServer(services.NewGRpcService())
+	conf.RegisterServer(&services.HelloWorldService{})
+	return conf
+}
+
+func gRpcClientConfig() camBase.ComponentConfigInterface {
+	conf := camGRpcClient.NewGRpcClient()
+	conf.SetOption(&camGRpcClient.Option{
+		Servers: []*camGRpcClient.Server{
+			{Addr: "127.0.0.1:30001"},
+		},
+	})
+	return conf
+}
+
+func gRpcServerConfig() camBase.ComponentConfigInterface {
+	conf := camGRpcServer.NewGRpcServer()
+	conf.Port = 30001
+	conf.Register(&services.HelloWorldService{}, backend_grpc.RegisterHelloWorldServer)
 	return conf
 }
