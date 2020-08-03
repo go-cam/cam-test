@@ -2,7 +2,7 @@ package structs
 
 import (
 	"github.com/go-cam/cam"
-	"github.com/go-cam/cam/base/camBase"
+	"github.com/go-cam/cam/base/camStatics"
 )
 
 type Valid struct {
@@ -13,8 +13,8 @@ type Valid struct {
 
 type Email string
 
-func (s *Valid) Rules() []camBase.RuleInterface {
-	return []camBase.RuleInterface{
+func (s *Valid) Rules() []camStatics.RuleInterface {
+	return []camStatics.RuleInterface{
 		cam.NewRule([]string{"Email", "MyEmail"}, cam.Rule.Email, cam.Rule.Length(0, 100)),
 	}
 }

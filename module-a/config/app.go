@@ -2,16 +2,16 @@ package config
 
 import (
 	"github.com/go-cam/cam"
-	"github.com/go-cam/cam/base/camBase"
+	"github.com/go-cam/cam/base/camStatics"
 	"github.com/go-cam/cam/base/camUtils"
 	"github.com/go-cam/cam/plugin/camRouter"
 	"test/module-a/controllers"
 	"test/module-a/middlewares"
 )
 
-func GetApp() camBase.AppConfigInterface {
+func GetApp() camStatics.AppConfigInterface {
 	conf := cam.NewConfig()
-	conf.ComponentDict = map[string]camBase.ComponentConfigInterface{
+	conf.ComponentDict = map[string]camStatics.ComponentConfigInterface{
 		"http":    http(),
 		"db":      db(),
 		"console": console(),
@@ -19,7 +19,7 @@ func GetApp() camBase.AppConfigInterface {
 	return conf
 }
 
-func http() camBase.ComponentConfigInterface {
+func http() camStatics.ComponentConfigInterface {
 	httpPort := camUtils.C.StringToUint16(cam.Env("HTTP_PORT"))
 
 	conf := cam.NewHttpConfig(httpPort)
@@ -35,7 +35,7 @@ func http() camBase.ComponentConfigInterface {
 	return conf
 }
 
-func db() camBase.ComponentConfigInterface {
+func db() camStatics.ComponentConfigInterface {
 	driver := cam.Env("DB_DRIVER")
 	host := cam.Env("DB_HOST")
 	port := cam.Env("DB_PORT")
@@ -46,6 +46,6 @@ func db() camBase.ComponentConfigInterface {
 	return cam.NewDatabaseConfig(driver, host, port, name, username, password)
 }
 
-func console() camBase.ComponentConfigInterface {
+func console() camStatics.ComponentConfigInterface {
 	return cam.NewConsoleConfig()
 }

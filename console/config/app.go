@@ -2,19 +2,19 @@ package config
 
 import (
 	"github.com/go-cam/cam"
-	"github.com/go-cam/cam/base/camBase"
+	"github.com/go-cam/cam/base/camStatics"
 	"test/console/controllers"
 )
 
-func GetApp() camBase.AppConfigInterface {
+func GetApp() camStatics.AppConfigInterface {
 	config := cam.NewConfig()
-	config.ComponentDict = map[string]camBase.ComponentConfigInterface{
+	config.ComponentDict = map[string]camStatics.ComponentConfigInterface{
 		"console": newConsoleConfig(),
 	}
 	return config
 }
 
-func newConsoleConfig() camBase.ComponentConfigInterface {
+func newConsoleConfig() camStatics.ComponentConfigInterface {
 	config := cam.NewConsoleConfig()
 	config.Register(&controllers.ConsoleController{})
 	return config
