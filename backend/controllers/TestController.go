@@ -4,7 +4,6 @@ import (
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camStructs"
 	"github.com/go-cam/cam/base/camUtils"
-	"gorm.io/gorm"
 	"test/backend/structs"
 	"time"
 )
