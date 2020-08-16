@@ -2,26 +2,33 @@ package config
 
 import (
 	"github.com/go-cam/cam"
+	"github.com/go-cam/cam/base/camConfig"
 	"github.com/go-cam/cam/base/camStatics"
+	"github.com/go-cam/cam/component/camCache"
+	"github.com/go-cam/cam/component/camConsole"
+	"github.com/go-cam/cam/component/camDatabase"
 	"github.com/go-cam/cam/component/camGRpcClient"
 	"github.com/go-cam/cam/component/camGRpcServer"
-	"github.com/go-cam/cam/component/camGrpc"
+	"github.com/go-cam/cam/component/camHttp"
+	"github.com/go-cam/cam/component/camLog"
+	"github.com/go-cam/cam/component/camMail"
+	"github.com/go-cam/cam/component/camSocket"
+	"github.com/go-cam/cam/component/camWebsocket"
 	"google.golang.org/grpc"
 	backend_grpc "test/backend-grpc"
 	"test/backend/controllers"
 	"test/backend/services"
 	"test/backend/structs"
-	"time"
 )
 
 // 获取默认配置
 func GetApp() camStatics.AppConfigInterface {
-	config := cam.NewConfig()
+	config := camConfig.NewConfig()
 	config.ComponentDict = map[string]camStatics.ComponentConfigInterface{
 		"ws":               websocketServer(),
 		"http":             httpServer(),
-		"db":               cam.NewDatabaseConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
-		"console":          cam.NewConsoleConfig(),
+		"db":               camDatabase.NewDatabaseComponentConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
+		"console":          camConsole.NewConsoleComponentConfig(),
 		"log":              log(),
 		"cache":            cacheConfig(),
 		"mail":             mailConfig(),
@@ -33,14 +40,14 @@ func GetApp() camStatics.AppConfigInterface {
 }
 
 func log() camStatics.ComponentConfigInterface {
-	config := cam.NewLogConfig()
-	config.PrintLevel = cam.LogLevelAll
-	config.WriteLevel = cam.LogLevelAll
+	config := camLog.NewLogConfig()
+	config.PrintLevel = camStatics.LogLevelAll
+	config.WriteLevel = camStatics.LogLevelAll
 	return config
 }
 
 func websocketServer() camStatics.ComponentConfigInterface {
-	config := cam.NewWebsocketConfig(20012)
+	config := camWebsocket.NewWebsocketComponentConfig(20012)
 	config.Register(&controllers.TestController{})
 	//config.AddMiddleware("", &middlewares.LogMiddleware{})
 	//config.AddMiddleware("", &middlewares.AMiddleware{})
@@ -49,7 +56,7 @@ func websocketServer() camStatics.ComponentConfigInterface {
 }
 
 func httpServer() camStatics.ComponentConfigInterface {
-	config := cam.NewHttpConfig(20000)
+	config := camHttp.NewHttpComponentConfig(20000)
 	config.SetContextStruct(&structs.HttpContextAo{})
 
 	config.Register(&controllers.TestController{})
@@ -61,8 +68,8 @@ func httpServer() camStatics.ComponentConfigInterface {
 }
 
 func cacheConfig() camStatics.ComponentConfigInterface {
-	config := cam.NewCacheConfig()
-	cache := cam.NewRedisCache()
+	config := camCache.NewCacheConfig()
+	cache := camCache.NewRedisEngine()
 	cache.SetBase64Crypt()
 	config.Engine = cache
 	return config
@@ -72,12 +79,12 @@ func mailConfig() camStatics.ComponentConfigInterface {
 	account := cam.App.GetEvn("EMAIL_ACCOUNT")
 	password := cam.App.GetEvn("EMAIL_PASSWORD")
 	host := cam.App.GetEvn("EMAIL_HOST")
-	config := cam.NewMailConfig(account, password, host)
+	config := camMail.NewMailConfig(account, password, host)
 	return config
 }
 
 func socketConfig() camStatics.ComponentConfigInterface {
-	config := cam.NewSocketConfig(20022)
+	config := camSocket.NewSocketComponentConfig(20022)
 	config.Trace = true
 
 	config.Register(&controllers.TestController{})
@@ -88,35 +95,11 @@ func socketConfig() camStatics.ComponentConfigInterface {
 	return config
 }
 
-func grpcBackendCliConfig() camStatics.ComponentConfigInterface {
-	conf := camGrpc.NewGRpcConfig(&camGrpc.Option{
-		Type: camGrpc.TypeClient,
-		Client: camGrpc.ClientOption{
-			ServerList: []string{"localhost:30001"},
-		},
-	})
-	return conf
-}
-
-func grpcBackendSrvConfig() camStatics.ComponentConfigInterface {
-	conf := camGrpc.NewGRpcConfig(&camGrpc.Option{
-		Type: camGrpc.TypeServer,
-		Server: camGrpc.ServerOption{
-			Addr: "localhost:30001",
-			Opts: []grpc.ServerOption{
-				grpc.ConnectionTimeout(5 * time.Second),
-			},
-		},
-	})
-	conf.RegisterServer(&services.HelloWorldService{})
-	return conf
-}
-
 func gRpcClientConfig() camStatics.ComponentConfigInterface {
 	conf := camGRpcClient.NewGRpcClient()
 	conf.SetOption(&camGRpcClient.Option{
 		Servers: []*camGRpcClient.Server{
-			{Addr: "127.0.0.1:30001"},
+			{Addr: "127.0.0.1:30001", DialOptions: []grpc.DialOption{grpc.WithInsecure()}},
 		},
 	})
 	return conf
