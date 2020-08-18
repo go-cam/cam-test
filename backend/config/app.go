@@ -87,6 +87,8 @@ func socketConfig() camStatics.ComponentConfigInterface {
 	config := camSocket.NewSocketComponentConfig(20022)
 	config.Trace = true
 
+	cam.Info("socketConfig", "sleep log test")
+
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})
 	//config.AddMiddleware("", &middlewares.LogMiddleware{})
