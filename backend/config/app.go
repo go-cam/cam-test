@@ -12,6 +12,7 @@ import (
 	"github.com/go-cam/cam/component/camHttp"
 	"github.com/go-cam/cam/component/camLog"
 	"github.com/go-cam/cam/component/camMail"
+	"github.com/go-cam/cam/component/camMysql"
 	"github.com/go-cam/cam/component/camSocket"
 	"github.com/go-cam/cam/component/camWebsocket"
 	"google.golang.org/grpc"
@@ -25,16 +26,17 @@ import (
 func GetApp() camStatics.AppConfigInterface {
 	config := camConfig.NewConfig()
 	config.ComponentDict = map[string]camStatics.ComponentConfigInterface{
-		"ws":               websocketServer(),
-		"http":             httpServer(),
-		"db":               camDatabase.NewDatabaseComponentConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
-		"console":          camConsole.NewConsoleComponentConfig(),
-		"log":              log(),
-		"cache":            cacheConfig(),
-		"mail":             mailConfig(),
-		"tcp":              socketConfig(),
-		"grpc-client":		gRpcClientConfig(),
-		"grpc-server":		gRpcServerConfig(),
+		"ws":          websocketServer(),
+		"http":        httpServer(),
+		"db":          camDatabase.NewDatabaseComponentConfig("mysql", "127.0.0.1", "3306", "cam", "root", "123456"),
+		"console":     camConsole.NewConsoleComponentConfig(),
+		"log":         log(),
+		"cache":       cacheConfig(),
+		"mail":        mailConfig(),
+		"tcp":         socketConfig(),
+		"grpc-client": gRpcClientConfig(),
+		"grpc-server": gRpcServerConfig(),
+		"mysql":       camMysql.NewMysqlComponentConfig(),
 	}
 	return config
 }
