@@ -1,9 +1,12 @@
 package controllers
 
 import (
+	"context"
+	"fmt"
 	"github.com/go-cam/cam"
 	"github.com/go-cam/cam/base/camStructs"
 	"github.com/go-cam/cam/base/camUtils"
+	backend_grpc "test/backend-grpc"
 	"test/backend/structs"
 	"time"
 )
@@ -82,7 +85,7 @@ func (ctrl *TestController) Recover() {
 }
 
 func (ctrl *TestController) Panic() {
-	panic(cam.NewRecover("test"))
+	panic(camStructs.NewRecover("test"))
 }
 
 func (ctrl *TestController) Post() {
@@ -108,9 +111,19 @@ func (ctrl *TestController) Valid() {
 }
 
 func (ctrl *TestController) Grpc() {
-	name := ctrl.GetString("name")
-	if name == "" {
-		name = "grpc"
+	conn := cam.App.GetGrpcClientConn("grpc-client")
+	helloSrv := backend_grpc.NewHelloWorldClient(conn)
+	recv, err :=helloSrv.SayHello(context.Background(), &backend_grpc.HelloWorld_SayHello_Recv{
+		Name: "123123",
+	})
+	if err != nil {
+		cam.Error("TestController.Grpc", err.Error())
 	}
+	name := "nn"
+	if recv != nil {
+		name = recv.GetName()
+	}
+	fmt.Println(recv)
 
+	ctrl.GetContext().Write([]byte(name))
 }

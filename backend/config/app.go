@@ -12,7 +12,6 @@ import (
 	"github.com/go-cam/cam/component/camHttp"
 	"github.com/go-cam/cam/component/camLog"
 	"github.com/go-cam/cam/component/camMail"
-	"github.com/go-cam/cam/component/camMysql"
 	"github.com/go-cam/cam/component/camSocket"
 	"github.com/go-cam/cam/component/camWebsocket"
 	"google.golang.org/grpc"
@@ -36,7 +35,6 @@ func GetApp() camStatics.AppConfigInterface {
 		"tcp":         socketConfig(),
 		"grpc-client": gRpcClientConfig(),
 		"grpc-server": gRpcServerConfig(),
-		"mysql":       camMysql.NewMysqlComponentConfig(),
 	}
 	return config
 }
@@ -88,8 +86,6 @@ func mailConfig() camStatics.ComponentConfigInterface {
 func socketConfig() camStatics.ComponentConfigInterface {
 	config := camSocket.NewSocketComponentConfig(20022)
 	config.Trace = true
-
-	cam.Info("socketConfig", "sleep log test")
 
 	config.Register(&controllers.TestController{})
 	config.Register(&controllers.FileController{})

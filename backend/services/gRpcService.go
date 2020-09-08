@@ -9,6 +9,6 @@ type HelloWorldService struct {
 	pb.UnimplementedHelloWorldServer
 }
 
-func (srv *HelloWorldService) Hello(ctx context.Context, recv *pb.HelloWorld_SayHello_Recv) (*pb.HelloWorld_SayHello_Send, error) {
+func (srv *HelloWorldService) SayHello(ctx context.Context, recv *pb.HelloWorld_SayHello_Recv) (*pb.HelloWorld_SayHello_Send, error) {
 	return &pb.HelloWorld_SayHello_Send{Name: recv.Name}, nil
 }
