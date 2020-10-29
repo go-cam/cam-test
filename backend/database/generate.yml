@@ -5,6 +5,7 @@ source:
   conn_str: root:123456@tcp(localhost:3306)/cam
 targets:
   - type: codes
+    language: golang
     include_tables: # tables included, you can use **
     exclude_tables: # tables excluded, you can use **
       - migration
@@ -18,7 +19,7 @@ targets:
       {{$ilen := len .Imports}}
       {{if gt $ilen 0}}
       import (
-        {{range .Imports}}"{{.}}"{{end}}
+      {{range .Imports}}"{{.}}"{{end}}
       )
       {{end}}
 
@@ -28,10 +29,6 @@ targets:
       {{range .ColumnsSeq}}{{$col := $table.GetColumn .}}	{{ColumnMapper $col.Name}}	{{Type $col}} `{{Tag $table $col}}`
       {{end}}
       }
-
-      func (m *{{TableMapper .Name}}) TableName() string {
-      	return "{{$table.Name}}"
-      }
       {{end}}
 #    template_path: ./template/goxorm.tmpl # template path for code file, it has higher perior than template field on language
-    output_dir: ./models # code output directory
+    output_dir: ./database/models # code output directory
