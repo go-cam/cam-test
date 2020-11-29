@@ -147,7 +147,7 @@
                 view.showSendDiv();
             };
             this.conn.onmessage = (conn, event) => {
-                console.log("接收到消息");
+                console.log("接收到消息", conn, event);
             };
             this.conn.onclose = (conn, event) => {
                 console.log("已关闭");
